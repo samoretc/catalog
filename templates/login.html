@@ -7,15 +7,30 @@
 <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.css') }}">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
 
+
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='modern-business.css') }}">
 
 </head> <body> 
-
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+             
+        </div>
+        </div>
+        <!-- /.container -->
+    </nav>
 
 <!-- GOOGLE PLUS SIGN IN-->
+<div class = "container" style = "position: relative;
+    top: 10px"> 
+  <h1 style ="display: inline">Sign in with Google:</h1>
+<div id="signInButton" style = "display: inline;    position: relative;
+    left: 20px;
+    top: 10px">
 
-          
-          <div id="signInButton">
           <span class="g-signin"
             data-scope="openid email"
             data-clientid="808096151375-ph4p0a19iesuu00eq3gs4lbrprlckks0.apps.googleusercontent.com"
@@ -25,7 +40,9 @@
             data-callback="signInCallback"
             data-approvalprompt="force">
           </span>
-        </div>
+
+</div>
+       
 
 <div id="result"></div>
 

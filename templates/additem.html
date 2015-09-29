@@ -23,37 +23,31 @@
         <!-- /.container -->
     </nav>
 
-      <!-- Page Content -->
+    
+
+    <!-- Page Content -->
     <div class="container">
 
             <!-- Marketing Icons Section -->
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
-                    The Best Sports' Catalog - Delete Item
+                    The Best Sports' Catalog - Add Item
                 </h1>
             </div>
 
 
             </div>
-	<h5>Are you sure you want to delete {{ deleteItem.name }}? </h5>
-	<br>
-	<form action="#" method = 'post' style = "display: inline-block">
+<form action = '{{ url_for(	  'addItem' , category_id = category_id	) }}'method = "POST"> 
+	<input type = 'text' name = 'name' placeholder = "name"> </input> 
+	<input type = 'text' name = 'image_url' placeholder = "image url"> </input> 
 
-	<button type="submit" class="btn btn-default delete" id="submit" type="submit">
-	<span class="glyphicon" aria-hidden="true"></span>Yes</button>
-	</form>
-	<a href = '{{url_for('CategoryItems', category_id = deleteItem.category_id)}}'>
-		<button class="btn btn-default delete">
-		<span class="glyphicon" aria-hidden="true"></span> No</button>
-	</a>
+	<input type = 'submit'></input>
+</form>
+     <!-- /.row -->
 
-
-<br><br>
-
-
-	
-
+    
+     
 
         <!-- Footer -->
         <footer class = "navbar-fixed-bottom">
@@ -79,3 +73,5 @@
     </script> -->
 
 {% endblock %}
+
+
