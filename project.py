@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Item, Category, User
@@ -26,6 +26,9 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+
 
 
 @app.route('/')
@@ -175,6 +178,14 @@ def CategoryItems(category_id):
 		return render_template('public_category.html', items = items, category_id=category_id)		
 	else:
 		return render_template('private_category.html', items =items, category_id=category_id, login_session = login_session) 
+
+
+# JSON APIs to view Category Items
+@app.route('/category/<int:category_id>/items/JSON')
+def restaurantMenuJSON(category_id):
+	items = session.query(Item).filter_by( category_id = category_id)
+	return jsonify(Items=[i.serialize for i in items])
+	
 
 @app.route('/category/<int:category_id>/additem', methods = ['POST', 'GET'])
 def addItem(category_id):

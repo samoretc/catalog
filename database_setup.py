@@ -36,6 +36,10 @@ class Item(Base):
 	user_id = Column(Integer(250) , ForeignKey('user.id'))
 	user = relationship(User)
 
+	@property
+	def serialize(self):
+		return { 'name': self.name, 'image_url': self.image_url}
+
 
 
 
