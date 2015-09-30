@@ -33,7 +33,7 @@ class Item(Base):
 	category_id = Column(Integer, ForeignKey('category.id')) # tablename.column
 	category = relationship(Category)	## I'm not quite sure the purpose of relationship, and what is the difference between the child and the parent
 
-	user_id = Column(Integer(250) , ForeignKey('user.id'))
+	user_id = Column(Integer , ForeignKey('user.id'))
 	user = relationship(User)
 
 	@property
