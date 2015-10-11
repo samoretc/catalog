@@ -6,6 +6,8 @@ from flask import session as login_session
 import random
 import string
 
+from functools import wraps
+
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -28,9 +30,6 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-
-
-
 @app.route('/')
 def homePage(): 
 	categories = session.query(Category).all()
@@ -41,11 +40,33 @@ def homePage():
 		return render_template('private_index.html', categories=categories, items=items, login_session=login_session )
 
 @app.route('/login')
-def login():
+def login(next = None):
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) 
 		for x in xrange(32))
 	login_session['state'] = state
-	return render_template('login.html', STATE = state)
+	return render_template('login.html', STATE = state, next =next ) ## I wanted to pass 'next' into the template so that after the user logins, they will be redirected to the page they were trying to get to. However, next is always None even though I pass in request.url. Any thoughts as to why? 
+	
+def login_required(func): 
+	@wraps(func)
+	def wrapped_function(*args, **kargs): 
+		print 'login required'
+		print args
+		print kargs
+		if 'username' not in login_session:
+			return redirect( url_for('login' , next=request.url) )
+		return func(*args, **kargs)
+	return wrapped_function
+
+
+def owner_required(func): 
+	@wraps(func)
+	def wrapped_function(*args, **kargs): ### Why is item_id and category_id passed in as a keyword argument when they aren't if you look at the edititem or deleteitem function. 
+		i = session.query(Item).filter_by( id = kargs['item_id'] ).one()
+		if login_session['user_id'] == i.user_id: 
+			return func(*args, **kargs)
+		return 'You did not create this item and are not permitted to take this action'
+	return wrapped_function
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -182,12 +203,19 @@ def CategoryItems(category_id):
 
 # JSON APIs to view Category Items
 @app.route('/category/<int:category_id>/items/JSON')
-def restaurantMenuJSON(category_id):
+def itemsJSON(category_id):
 	items = session.query(Item).filter_by( category_id = category_id)
 	return jsonify(Items=[i.serialize for i in items])
-	
+
+# JSON APIs to view Category Items
+@app.route('/category/all')
+def categoriesJSON():
+	categories = session.query(Category)
+	return jsonify(Categories=[i.serialize for i in categories])
+		
 
 @app.route('/category/<int:category_id>/additem', methods = ['POST', 'GET'])
+@login_required
 def addItem(category_id):
 	if request.method == 'POST':
 		newItem = Item(name = request.form['name'], image_url = request.form['image_url'], category_id = category_id, user_id = login_session['user_id'])
@@ -200,6 +228,8 @@ def addItem(category_id):
 		return render_template('additem.html', category_id = category_id, login_session = login_session)
 			
 @app.route('/category/<int:category_id>/items/<int:item_id>/edit', methods = ['POST', 'GET']) 
+@owner_required
+@login_required
 def editItem(category_id, item_id): 
 	editItem = session.query(Item).filter_by( id = item_id).one()
 	if request.method == 'POST': 
@@ -212,6 +242,8 @@ def editItem(category_id, item_id):
 	return render_template('editItem.html', editItem = editItem, login_session = login_session)
 
 @app.route('/category/<int:category_id>/items/<int:item_id>/delete', methods = ['POST', 'GET']) 
+@owner_required
+@login_required
 def deleteItem(category_id, item_id): 
 	deleteItem = session.query(Item).filter_by(  id = item_id   ).one()
 	if request.method == 'POST':
@@ -219,11 +251,9 @@ def deleteItem(category_id, item_id):
 		flash( '%s Successfully Deleted' % deleteItem.name)
 		session.commit()
 		return redirect( url_for('CategoryItems', category_id = category_id))
-		# session.delete(deleteItem)
-  #       # flash('%s Successfully Deleted' % deleteItem.name)
-  #       session.commit()
-  #      # r
 	return render_template('deleteItem.html', deleteItem=deleteItem, login_session = login_session)
+
+
 
 if __name__ == '__main__':
 	app.secret_key = 'super_secret_key'
