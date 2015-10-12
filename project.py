@@ -41,7 +41,7 @@ def homePage():
 
 @app.route('/login')
 def login(next = None):
-	print next
+
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) 
 		for x in xrange(32))
 	login_session['state'] = state
@@ -50,11 +50,7 @@ def login(next = None):
 def login_required(func): 
 	@wraps(func)
 	def wrapped_function(*args, **kargs): 
-		print 'login required'
-		print args
-		print kargs
 		if 'username' not in login_session:
-			print request.url
 			return redirect( url_for('login' , next=request.url) )
 		return func(*args, **kargs)
 	return wrapped_function
@@ -172,12 +168,11 @@ def gdisconnect():
 		return response
 
 	access_token = credentials
-	print access_token
+
 	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[0]
-	print result['status'
-	]
+
 	if result['status'] == '200':
 		# Reset the user's sesson.
 		del login_session['credentials']
