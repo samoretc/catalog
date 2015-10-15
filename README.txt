@@ -1,6 +1,10 @@
-This is a web application catalog. It uses flask and SQLAlchemy for the backend and bootstrap for the front end. Flask version 0.9 must be used. The easiest way to install this is to install pip and run the command 'pip install flask==0.9'. 
+# About 
+
+This is an online catalog that allows users to authenticate and add, edit, and delete items. It uses flask and SQLAlchemy for the backend and bootstrap for the front end. 
 
 Users can log on to the web application via google plus to add sports items. In order to set this up on your envinronment, you will need to create an app engine project on the google developer's console, and then replace client_secret.json with the client_secret for your app.   
+
+Flask version 0.9 must be used. The easiest way to install this is to install pip and run the command 'pip install flask==0.9'. 
 
 Additionally, a database must be created and populated with data. To create the database, run the database_setup.py file. Next, run the the populate.py file to populate the database with several categories and items. 
 
