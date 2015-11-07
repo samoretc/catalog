@@ -45,7 +45,7 @@ def login(next = None):
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) 
 		for x in xrange(32))
 	login_session['state'] = state
-	return render_template('login.html', STATE = state, next =next ) ## I wanted to pass 'next' into the template so that after the user logins, they will be redirected to the page they were trying to get to. However, next is always None even though I pass in request.url. Any thoughts as to why? 
+	return render_template('login.html', STATE = state, next =next )
 	
 def login_required(func): 
 	@wraps(func)
@@ -58,7 +58,7 @@ def login_required(func):
 
 def owner_required(func): 
 	@wraps(func)
-	def wrapped_function(*args, **kargs): ### Why is item_id and category_id passed in as a keyword argument when they aren't if you look at the edititem or deleteitem function. 
+	def wrapped_function(*args, **kargs): 
 		i = session.query(Item).filter_by( id = kargs['item_id'] ).one()
 		if login_session['user_id'] == i.user_id: 
 			return func(*args, **kargs)
