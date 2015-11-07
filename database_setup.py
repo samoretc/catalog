@@ -3,11 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
-Base = declarative_base() # i'm not quite sure what a base is. 
+Base = declarative_base() 
 
-# class User(Base):
-# 	__tablename__ = 'user'
-# 	id = Column
 class User(Base): 
 	__tablename__ = 'user'
 	
@@ -32,8 +29,8 @@ class Item(Base):
 	id = Column(Integer, primary_key = True) 
 	name = Column(String(250))
 	image_url = Column(String(250))
-	category_id = Column(Integer, ForeignKey('category.id')) # tablename.column
-	category = relationship(Category)	## I'm not quite sure the purpose of relationship, and what is the difference between the child and the parent
+	category_id = Column(Integer, ForeignKey('category.id'))
+	category = relationship(Category)
 
 	user_id = Column(Integer , ForeignKey('user.id'))
 	user = relationship(User)
