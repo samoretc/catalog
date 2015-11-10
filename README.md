@@ -1,6 +1,6 @@
 # About 
 
-This is an online catalog that allows users to authenticate and add, edit, and delete items. It uses flask and SQLAlchemy for the backend and bootstrap for the front end. 
+This is an online catalog that allows users to authenticate and add, edit, and delete items. It uses flask and SQLAlchemy for the backend and bootstrap for the frontend. 
 
 Users can log on to the web application via google plus to add sports items. In order to set this up on your envinronment, you will need to create an app engine project on the google developer's console, and then replace client_secret.json with the client_secret for your app.   
 
